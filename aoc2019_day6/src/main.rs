@@ -1,10 +1,11 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet}; //using System.Collections.Dictionary;using System.Collections.HashSet;
+use std::time::Instant; //using System.DateTime //eller nåt sånt!
 
 
-fn make_parentage_map(input:&str) -> HashMap<&str,&str> {
+fn make_parentage_map(input:&str) -> HashMap<&str,&str> { // Dictionary<string,string> make_parentage_map(string input)
     let mut parents = HashMap::new();
     for line in input.split_ascii_whitespace() {
-        let mut x = line.split(")");
+        let mut x = line.split(")"); // Enumerator<string> x = line.Split(")")
         let parent = x.next().unwrap();
         let child = x.next().unwrap();
         parents.insert(child,parent);
@@ -18,11 +19,11 @@ fn count_orbits_between_parents_of(input:&'static str,from:&str,to:&str) -> usiz
 
     let parents = make_parentage_map(input);
 
-    let list_of_parents = |mut x:&str| {
-        let mut ret = Vec::new();
+    let list_of_parents = |mut x:&str| { // Func<String,List<String>> list_of_parents =
+        let mut ret = Vec::new(); //var ret = new List<String>();
         loop {
-            if let Some(parent) = parents.get(x) {
-                ret.push(parent);
+            if let Some(parent) = parents.get(x) { //if parents.TryGetValue(x, out parent)
+                ret.push(parent); // ret.Add(parent)
                 x = *parent;
             } else {
                 ret.reverse();
@@ -35,22 +36,22 @@ fn count_orbits_between_parents_of(input:&'static str,from:&str,to:&str) -> usiz
     let from_lineage = list_of_parents(from);
     assert!(from_lineage.len() >= 1);  //Since we're counting from parents, there must actually be parents
     assert!(to_lineage.len() >= 1);
-    let mut last_common = None;
-    for i in 0..to_lineage.len().min(from_lineage.len()) {
+    let mut last_common = None; //int? last_common = null;
+    for i in 0..to_lineage.len().min(from_lineage.len()) { //for(int i=0;i<Math.Min(to_lineage.Count,from_lineage.Count);++i)
         if from_lineage[i]!=to_lineage[i] {
             break;
         }
-        last_common = Some(i);
+        last_common = Some(i); //last_common = i;
     }
-    assert!(last_common.is_some());
+    assert!(last_common.is_some()); //assert(last_common.HasValue)
     let down_to_common = from_lineage.len()-last_common.unwrap();
     let up_to_target = to_lineage.len()-last_common.unwrap();
 
     down_to_common + up_to_target - 2 //Since we're only counting the orbits between the parents of the given inputs
 }
-fn count_orbits(input:&str) -> i64 {
+fn count_orbits(input:&str) -> i64 { // long count_orbits(string input)
     let parents = make_parentage_map(input);
-    let chase_and_count_parents = |mut child|{
+    let chase_and_count_parents = |mut child|{ //Func<String,long> chase_and_count_parents =
         let mut result = 0;
         loop {
             if let Some(parent) = parents.get(child) {
@@ -62,7 +63,7 @@ fn count_orbits(input:&str) -> i64 {
         }
     };
     let mut sum = 0;
-    for (child,parent) in &parents {
+    for (child,parent) in &parents { // foreach (child,parent) in parents
         sum += chase_and_count_parents(child);
     }
 
@@ -71,6 +72,7 @@ fn count_orbits(input:&str) -> i64 {
 }
 
 fn main() {
+    let now = Instant::now();
     let input ="PQK)Q5S
 8QF)BST
 7DY)PBP
@@ -2674,8 +2676,9 @@ ZJ3)K5F
 KP6)Y51
 ST9)8XM
 72K)6BF";
-    println!("Part 1: {}",count_orbits(input));
+    println!("Part 1: {}",count_orbits(input)); // Console.Writeline("Part 1: {0}",count_orbits(input));
     println!("Part 2: {}",count_orbits_between_parents_of(input,"YOU","SAN"));
+    println!("{}", now.elapsed().as_micros());
 }
 
 
