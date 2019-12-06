@@ -15,7 +15,7 @@ fn make_parentage_map(input:&str) -> HashMap<&str,&str> { // Dictionary<string,s
 
 
 
-fn count_orbits_between_parents_of(input:&'static str,from:&str,to:&str) -> usize {
+fn count_orbits_between_parents_of(input:&'static str,from:&str,to:&str) -> usize { //ulong count_orbits_of_parents_of(string input, string from, string to)
 
     let parents = make_parentage_map(input);
 
